@@ -34,7 +34,6 @@ services:
         user: root
         image: "jenkinsci/blueocean"
         privileged: true
-        user: root
         ports:
             - "8083:8080"
             - "50000:50000"
