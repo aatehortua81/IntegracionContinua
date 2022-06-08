@@ -1,14 +1,71 @@
-version: "3"
+version: '3'
 
 services:
-  app:
-    image: platziapp
-    environment:
-      MONGO_URL: "mongodb://db:27017/test"
-    depends_on:
-      - db
-    ports:
-      - "3000:3000"
+    db:
+        image: mysql
+        volumes:
+            - data:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=secret
+            - MYSQL_DATABASE=wordpress
+            - MYSQL_USER=manager
+            - MYSQL_PASSWORD=secret
+        container_name: mysql
+        networks:
+        - mynet
 
-  db:
-    image: mongo
+    web:
+        image: wordpress
+        depends_on:
+            - db
+        volumes:
+            - ./target:/var/www/html
+        environment:
+            - WORDPRESS_DB_USER=manager
+            - WORDPRESS_DB_PASSWORD=secret
+            - WORDPRESS_DB_HOST=db
+        container_name: wordpress
+        ports:
+            - 8082:80
+        networks:
+        - mynet
+                
+    jenkins:
+        user: root
+        image: "jenkinsci/blueocean"
+        privileged: true
+        user: root
+        ports:
+            - "8083:8080"
+            - "50000:50000"
+        container_name: jenkins
+        volumes:
+        - /home/${myname}/jenkins_compose/jenkins_configuration:/var/jenkins_home
+        - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+        - mynet
+      
+    sonarqube:
+        image: "sonarqube"
+        container_name: sonarqube
+        ports:
+            - "9000:9000"
+        networks:
+        - mynet
+
+    adminer:
+        image: "adminer"
+        container_name: adminer
+        ports:
+            - "8084:8080"
+        networks:
+        - mynet
+
+volumes:
+    data:
+
+networks:
+  mynet:
+    driver: bridge
+
+  
