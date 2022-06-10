@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Pipeline2022') {
       steps {
-        echo 'Estamos revisando los flujos del pipeline 2 de integración continua'
+        echo 'Estamos revisando los flujos del pipeline 2 de integraciÃ³n continua'
         fileExists 'https://github.com/aatehortua81/IntegracionContinua/blob/MasterContinua/docker-compose.yml'
       }
     }
