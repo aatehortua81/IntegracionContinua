@@ -1,0 +1,2 @@
+- name: Codeship Environment Variable Adapter
+  uses: twistedpair/codeship-env-adapter@v1.0.0
