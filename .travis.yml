@@ -1,7 +1,20 @@
-language: node_js
-node_js: "12"
-script:
-  - "npm run lint"
-  - "npm test"
-  - "npm run build"
+language: php
+dist: windows
+php:
+-7.3
+service:
+- mysql
 
+before_script:
+cp .env.example .env
+
+-mysql -e "create database labvarel"
+-composer selt update
+-composer install --no-interaction -- prefer -source
+
+-php artisan key: generate
+-php artisan migrate
+
+
+script:
+- vendor/bin/phpunit
